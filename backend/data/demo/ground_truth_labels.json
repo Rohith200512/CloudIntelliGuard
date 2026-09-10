@@ -1,0 +1,68 @@
+{
+  "_description": "Ground-truth anomaly labels for the CloudIntelliGuard demo dataset.",
+  "_notes": [
+    "Labels are human-assigned based on observable behavioral patterns in the demo data.",
+    "U006: Off-hours access (02:00-04:30 UTC), high IAM and Secrets Manager access, elevated failure rate (7/21 = 33%).",
+    "U007: Extremely high request frequency (40 requests in ~30 minutes), broad reconnaissance pattern across 8+ services.",
+    "U001-U005: Normal working-hours access, single-service patterns, zero failures.",
+    "These labels are for evaluation purposes only. Do NOT use to claim real attack detection."
+  ],
+  "labels": {
+    "U001": {
+      "is_anomaly": false,
+      "anomaly_type": null,
+      "observable_indicators": ["normal hours", "single service focus (s3, ec2)", "zero failures"]
+    },
+    "U002": {
+      "is_anomaly": false,
+      "anomaly_type": null,
+      "observable_indicators": ["normal hours", "limited services (s3, lambda)", "zero failures"]
+    },
+    "U003": {
+      "is_anomaly": false,
+      "anomaly_type": null,
+      "observable_indicators": ["normal hours", "cloudformation workflow", "zero failures"]
+    },
+    "U004": {
+      "is_anomaly": false,
+      "anomaly_type": null,
+      "observable_indicators": ["normal hours", "single service (dynamodb)", "zero failures"]
+    },
+    "U005": {
+      "is_anomaly": false,
+      "anomaly_type": null,
+      "observable_indicators": ["normal hours", "messaging services", "zero failures"]
+    },
+    "U006": {
+      "is_anomaly": true,
+      "anomaly_type": "suspicious",
+      "observable_indicators": [
+        "off-hours access (02:00-04:30 UTC)",
+        "IAM credential manipulation (CreateAccessKey, CreateUser, AttachUserPolicy)",
+        "Secrets Manager access (multiple secrets)",
+        "KMS key access",
+        "elevated failure rate (7/21 = 33%)",
+        "temporal overlap with U007"
+      ]
+    },
+    "U007": {
+      "is_anomaly": true,
+      "anomaly_type": "suspicious",
+      "observable_indicators": [
+        "very high frequency (40 requests in ~31 minutes)",
+        "broad multi-service access (s3, ec2, lambda, dynamodb, secretsmanager, rds, kms, iam, sqs, sns)",
+        "off-hours access (02:15-02:42 UTC)",
+        "reconnaissance-like pattern across 10+ different service types",
+        "temporal overlap with U006"
+      ]
+    }
+  },
+  "coordinated_pairs": [
+    {
+      "users": ["U006", "U007"],
+      "temporal_overlap_window": "2024-01-15T02:15:00Z to 2024-01-15T04:00:00Z",
+      "shared_services": ["secretsmanager", "kms", "iam"],
+      "evidence_note": "Factual temporal and service overlap only. No causal relationship claimed."
+    }
+  ]
+}

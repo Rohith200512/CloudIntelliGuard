@@ -1,0 +1,39 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Python environments and generated files
+backend/.venv/
+backend/venv/
+backend/venv*/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/.pytest_cache/
+*.py[cod]
+*.pyd
+
+# Local databases and runtime files
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+*.log
+
+# Frontend dependencies and build output
+frontend/node_modules/
+frontend/dist/
+
+# Large local datasets and generated model artifacts
+archive/*.csv
+backend/data/raw/
+backend/data/processed/
+backend/models/trained/
+backend/models/checkpoints/
+
+# Editor and OS files
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
